@@ -37,13 +37,17 @@
           <div class="text-center text-muted mb-4">
             <small>Or sign in with credentials</small>
           </div>
-          <form role="form">
+          <form role="form" name="form" (ngSubmit)="formulaire.form.valid && onSubmit(formulaire)" #formulaire="ngForm">
             <div class="form-group mb-3">
               <div class="input-group input-group-alternative">
                 <div class="input-group-prepend">
-                  <span class="input-group-text"><i class="ni ni-email-83"></i></span>
+                  <span class="input-group-text"><i class="ni ni-user-run"></i></span>
                 </div>
-                <input class="form-control" placeholder="Email" type="email">
+                <input class="form-control" placeholder="Username" type="text" name="username" [(ngModel)]="form.username"
+                       #username="ngModel" required>
+              </div>
+              <div *ngIf="formulaire.submitted && username.invalid" >
+                <div *ngIf="username.errors.required" class="alert alert-heading"> Username is required</div>
               </div>
             </div>
             <div class="form-group">
@@ -51,7 +55,12 @@
                 <div class="input-group-prepend">
                   <span class="input-group-text"><i class="ni ni-lock-circle-open"></i></span>
                 </div>
-                <input class="form-control" placeholder="Password" type="password">
+                <input class="form-control" placeholder="Password" type="password" name="password" [(ngModel)]="form.password"
+                      #password="ngModel" required minlength="6">
+              </div>
+              <div *ngIf="formulaire.submitted && password.invalid">
+                <div *ngIf="password.errors.required" class="alert alert-heading">Password is required</div>
+                <div *ngIf="password.errors.minlength" class="alert alert-heading">Password must be at least 6 characters</div>
               </div>
             </div>
             <div class="custom-control custom-control-alternative custom-checkbox">
@@ -62,6 +71,9 @@
             </div>
             <div class="text-center">
               <button type="button" class="btn btn-primary my-4">Sign in</button>
+              <div *ngIf="formulaire.submitted && isLoginFailed" class="alert alert-heading">
+                Login failed: {{errorMessage}}
+              </div>
             </div>
           </form>
         </div>
